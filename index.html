@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="buttons"></div>
+    <div id="myData"></div>
+    <script>
+        (async () => {
+            let loadData = async () => {
+                console.log("loading posts");
+                await fetch('show')
+                    .then(res => res.json())
+                    .then(data => appendData(data))
+                    .catch(error => console.error(error));
+            }
+            function appendData(data) {
+                let mainContainer = document.getElementById("myData");
+                mainContainer.innerHTML="";
+                for (var i = 0; i < data.length; i++) {
+                    let div = document.createElement("div");
+                    div.setAttribute('id', data[i].id)
+                    div.innerHTML = 'id: ' + data[i].id + ' creator: ' + data[i].creator + ' post body: ' +
+                        data[i].postBody;
+                    let btn = document.createElement('button');
+                    btn.innerHTML = 'del';
+                    btn.onclick = function () {
+                        console.log(this.parentNode.id);
+                        fetch(`delete/?id=${this.parentNode.id}`).then(data => data.text()).then(res => console.log(res));
+                        this.parentNode.parentNode.removeChild(this.parentNode);
+                    };
+                    div.appendChild(btn);
+                    mainContainer.appendChild(div);
+                }
+            }
+
+            let button = document.createElement("button");
+            button.innerHTML = "Add";
+            button.onclick = async () => {
+                await fetch('/add?creator=maxim&postBody=AnotherPost');
+                await loadData();
+            }
+            document.getElementById("buttons").appendChild(button);
+            await loadData();
+
+        })();
+    </script>
+</body>
+
+</html>
