@@ -15,7 +15,7 @@
         (async () => {
             let loadData = async () => {
                 console.log("loading posts");
-                await fetch('show')
+                await fetch('http://localhost:3000/show')
                     .then(res => res.json())
                     .then(data => appendData(data))
                     .catch(error => console.error(error));
@@ -32,7 +32,7 @@
                     btn.innerHTML = 'del';
                     btn.onclick = function () {
                         console.log(this.parentNode.id);
-                        fetch(`delete/?id=${this.parentNode.id}`).then(data => data.text()).then(res => console.log(res));
+                        fetch(`http://localhost:3000/delete/?id=${this.parentNode.id}`).then(data => data.text()).then(res => console.log(res));
                         this.parentNode.parentNode.removeChild(this.parentNode);
                     };
                     div.appendChild(btn);
@@ -43,7 +43,7 @@
             let button = document.createElement("button");
             button.innerHTML = "Add";
             button.onclick = async () => {
-                await fetch('/add?creator=maxim&postBody=AnotherPost');
+                await fetch('http://localhost:3000/add?creator=maxim&postBody=AnotherPost');
                 await loadData();
             }
             document.getElementById("buttons").appendChild(button);
